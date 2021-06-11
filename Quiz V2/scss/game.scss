@@ -1,0 +1,47 @@
+@import "main";
+$primary-color: #48B4FC;
+
+
+.choice-container{
+    display: flex;
+    margin-bottom:0.5rem;
+    width:100%;
+    font-size: 1.8rem;
+    border: 0.1rem solid $primary-color;
+    background-color: white;
+    @include hoverStyle;
+}
+
+
+
+.choice-prefix{
+    padding: 1.5rem 2.5rem;
+    background-color: $primary-color;
+    color: white;
+}
+
+.choice-text{
+    padding: 1.5rem;
+}
+
+.correct{
+background-color: green;
+}
+.incorrect{
+    background-color: red;
+}
+
+/*HUD*/
+#hud{
+  display: flex;
+  justify-content: space-between;
+  }
+  
+  .hud-prefix{
+    justify-content: center;
+    font-size: 2rem;
+  }
+  
+  .hud-main-text{
+    text-align: center;
+  }
