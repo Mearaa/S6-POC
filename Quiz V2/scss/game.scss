@@ -1,5 +1,5 @@
-@import "main";
-$primary-color: #48B4FC;
+@import "config";
+@import "utilities";
 
 
 .choice-container{
@@ -7,17 +7,13 @@ $primary-color: #48B4FC;
     margin-bottom:0.5rem;
     width:100%;
     font-size: 1.8rem;
-    border: 0.1rem solid $primary-color;
-    background-color: white;
+    border: 0.1rem solid $secondary-color;
     @include hoverStyle;
 }
 
-
-
 .choice-prefix{
     padding: 1.5rem 2.5rem;
-    background-color: $primary-color;
-    color: white;
+    background-color: $secondary-color;
 }
 
 .choice-text{
@@ -45,3 +41,5 @@ background-color: green;
   .hud-main-text{
     text-align: center;
   }
+
+ 

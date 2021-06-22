@@ -1,49 +1,38 @@
 const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
-const questionCounterText = document.getElementById('questionCounter');
+const progressText = document.getElementById('progressText');
+const progressBarFull = document.getElementById('progressBarFull');
 const scoreText = document.getElementById('score');
 //VARS// 
 
 var currentQuestion = {};
 var acceptingAnswers = true;
 var score = 0;
-var questionCounter = 0; 
+var questionCounter = 0;
 var availableQuestions = [];
 var questionIndex = 0;
 
 // HARD CODED VRAGEN//
-var questions = [{
-    question: "Ik heb al enige tijd last van trage en wegvallende wifi. Weten jullie waardoor dit komt?",
-    choice1: "Ik ga u hiervoor doorverbinden",
-    choice2: "Heeft u dit ook bedraad?",
-    choice3: "Wat voor apparaten heeft u aangesloten?",
-    choice4: "Geen idee",
-    answer: "2", 
-},
-{
-    question: "Ik heb inderdaad een pinapparaat bekabeld staan. Wat kan ik nu als beste doen om ervoor te zorgen dat mijn wifi verbinding weer goed is?",
-    choice1: "Adviseer de klant de wifi manager te doorlopen",
-    choice2: "Laat de klant het pinapparaat ontkoppelen",
-    choice3: "Geef het modem een harde reset",
-    choice4: "Raad de klant een monteur aan",
-    answer: "2",
-},
- {
-    question: "Oh huh!? Mijn wifi snelheid schiet ineens omhoog, wat geweldig! Wat kan ik doen om dit probleem weer te voorkomen?",
-    choice1: "Adviseer de klant contact op te nemen met leverancier van het pinapparaat.",
-    choice2: "Vertel de klant dat ze hiervoor altijd moet bellen.",
-    choice3: "Geef geen advies, dit is vertrouwelijke informatie.",
-    choice4: "Adviseer de klant het pinapparaat te vervangen.",
-    answer: "1",
-}];
+var questions = [];
+
+fetch("js/questions.json")
+    .then(response => {
+        return response.json()
+    })
+    .then(loadedQuestions => {
+
+        questions = loadedQuestions;
+        startGame();
+
+    });
 
 // Consts
 
-const correct_bonus = 10;
-const max_questions = 3;
+const correct_bonus = 10; // Dit is de waarde van de score die toegevoegd zal worden
+const max_questions = 3; // Maximale aantal vragen
 
 // Function om het spel op te starten, zet de variabelen op 0.  // 
-function startGame(){
+function startGame() {
     questionCounter = 0;
     score = 0;
     availableQuestions = [...questions];
@@ -51,61 +40,66 @@ function startGame(){
     renderQuestion();
 }
 
+// Maakt de vragen
+
 function renderQuestion() {
-    if(availableQuestions.length == 0 || questionCounter >= max_questions){
-        return window.location.assign("/end.html");
+    if (availableQuestions.length == 0 || questionCounter >= max_questions) {
+        localStorage.setItem("mostRecentScore", score);
+        return window.location.assign("/end.html"); // Stuurt de gebruiker naar het highscore scherm als alle vragen zijn beantwoord
     } // Wanneer er geen vragen meer zijn wordt de gebruiker gestuurd naar het eindscherm. 
-   questionCounter++; // Telt welke vraag er nu is. 
-   questionCounterText.innerText = questionCounter + "/" + max_questions;
-   currentQuestion = availableQuestions[questionIndex]; // Houd bij welke vraag hierna komt. 
-   question.innerText = currentQuestion.question;   // Pakt de tekst van de huidige vraag uit de js. 
+    questionCounter++; // Telt welke vraag er nu is. 
+    progressText.innerText = `Question ` + questionCounter + "/" + max_questions;
 
-   choices.forEach(choice => {
-       const number = choice.dataset ['number']; // Pakt het bijbehorende nummer bij de vraag. 
-       choice.innerText = currentQuestion["choice" + number]; // Zelfde bij de question. 
-   });
+    // update progressBar
 
-  // acceptingAnswers = true;
+    progressBarFull.style.width = (questionCounter / max_questions) * 100 + `%`;
+    currentQuestion = availableQuestions[questionIndex]; // Houd bij welke vraag hierna komt. 
+    question.innerText = currentQuestion.question; // Pakt de tekst van de huidige vraag uit de js. 
+
+    choices.forEach(choice => {
+        const number = choice.dataset['number']; // Pakt het bijbehorende nummer bij de vraag. 
+        choice.innerText = currentQuestion["choice" + number]; // Zelfde bij de question. 
+    });
+
+    // acceptingAnswers = true;
 
 };
 
 
 
-choices.forEach(choice =>{
-    choice.addEventListener("click", event =>{
-       // if (!acceptingAnswers) return;
+choices.forEach(choice => {
+    choice.addEventListener("click", event => {
 
-       // acceptingAnswers = false;
+
+        // if (!acceptingAnswers) return;
+
+        // acceptingAnswers = false;
         const selectedChoice = event.target;
         const selectedAnswer = selectedChoice.dataset['number'];
 
-        var classToApply = 'incorrect'  // Als current.question.answer niet gelijk is aan selectedanswer zal dit altijd incorrect zijn. 
-        if (selectedAnswer == currentQuestion.answer){
-            classToApply = 'correct' // Als het antwoord goed is dan wordt de class correct toegevoegd. 
-       }
-       console.log(classToApply); // Testen
+        var classToApply = 'incorrect' // Als current.question.answer niet gelijk is aan selectedanswer zal dit altijd incorrect zijn. 
+        var check = currentQuestion.answer.includes(selectedAnswer);
 
-       if(classToApply === "correct"){
-           scoreCounter(correct_bonus);
-       }
+        if (check) {
+            classToApply = 'correct'
+            scoreCounter(correct_bonus); // Als het antwoord goed is dan wordt de class correct toegevoegd. 
+        }
+        console.log(classToApply); // Testen
 
-       selectedChoice.parentElement.classList.add(classToApply); // Voegt de class .correct of .incorrect toe aan de choice-container.
+       selectedChoice.parentElement.classList.add(classToApply);
+       //document.getElementsByClassName("choice-text").classList.add(classToApply);
 
-// SetTimeOut staat ervoor dat de class verwijderd wordt van de container en de volgende vraag wordt ingeladen. 
+        // SetTimeOut staat ervoor dat de class verwijderd wordt van de container en de volgende vraag wordt ingeladen. 
 
-       setTimeout(( )=>{
-        selectedChoice.parentElement.classList.remove(classToApply); // Verwijderd de incorrect of correct class. 
-        questionIndex ++; // Volgende vraag in de array
-        renderQuestion(); 
-
-
-       }, 500);
-      
+      //  setTimeout(() => {
+      //     selectedChoice.parentElement.classList.remove(classToApply); // Verwijderd de incorrect of correct class. 
+        //    questionIndex++; // Volgende vraag in de array
+         //   renderQuestion();
+        //}, 500);
     });
 });
-function scoreCounter(number){
+
+function scoreCounter(number) {
     score += number;
     scoreText.innerText = score; // Functie om te score op te tellen
 };
-
-startGame();

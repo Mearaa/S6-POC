@@ -1,0 +1,23 @@
+@mixin hoverStyle {
+    &:hover{ 
+        cursor: pointer;
+        box-shadow: 0 0.4rem 1.2rem 0 $secondary-color;
+        transform:translateY(-0.1rem);
+        transition: transform 150ms;
+
+    }
+}
+
+
+@function set-text-color($color){
+    @if(lightness($color) > 50) {
+        @return #333;
+    } @else {
+        @return #fff;
+    }
+}
+
+@mixin set-background($color){
+    background-color: $color;
+    color: set-text-color($color);
+}

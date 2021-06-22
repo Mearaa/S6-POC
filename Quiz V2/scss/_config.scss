@@ -1,0 +1,37 @@
+// Colors//
+$primary-color: #01C302;
+$secondary-color: #48B4FC;
+$light-color: #f4f4f4;
+$dark-color:#333333;
+
+//Fonts//
+$font-size: 62.5%;
+$font-weights:(
+    "regular": 400,
+    "medium" : 500,
+    "bold" : 700
+);
+
+// Mixin // 
+@mixin hoverStyle {
+    &:hover{ 
+        cursor: pointer;
+       // box-shadow: 0 0.4rem 1.2rem 0 $primary-color;
+       background: lighten($color ,5%);
+        transform:translateY(-0.1rem);
+        transition: transform 150ms;
+    }
+}
+
+@function set-text-color($color){
+    @if(lightness($color) > 50) {
+        @return #333;
+    } @else {
+        @return #fff;
+    }
+}
+
+@mixin set-background($color){
+    background-color: $color;
+    color: set-text-color($color);
+}
