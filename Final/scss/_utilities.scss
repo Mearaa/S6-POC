@@ -16,6 +16,35 @@ body {
     @include set-background($dark-color);
 }
 
+// H1, H2, H3 // 
+h1,
+h2,
+h3,
+h4 {
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 5.4rem;
+    color: $primary-color;
+    margin-bottom: 5rem;
+}
+
+h1>span {
+    font-size: 2.4rem;
+    font-weight: map-get($font-weights, regular);
+}
+
+h2 {
+    font-size: 4.2rem;
+    margin-bottom: 4rem;
+    font-weight: map-get($font-weights, bold);
+}
+
+h3 {
+    font-size: 2.8rem;
+    font-weight: map-get($font-weights, regular);
+}
 // Buttons // 
 
 .btn {
