@@ -57,6 +57,9 @@ Deze mixin kan gemakkelijk gebruikt worden door onderstaande regel in de class o
 @include hoverstyle();
 ```` 
 
+In de _utilities.scss staan de standaard elementen die vaker gebruikt kunnen worden zoals de buttons, de body en de progressbar. Hier kan de styling van deze elementen gemakkelijk aangepast worden. 
+In de main.scss, game.scss en highscores.scss worden elementen gebruikt die van toepassing zijn op die pagina's. 
+
 ## game.js
 
 In dit javascript bestand worden de meeste functies voor een werkend spel gedefineerd. Vanaf regel 1 tm 13 worden de consts en vars gedefineerd. **_Let op:_** Hou er rekening mee dat als je de class of Id namen in de HTML aanpast dat je dit ook doet in de javascript consts. 
